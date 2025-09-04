@@ -1,4 +1,6 @@
+import 'package:assessment/helpers/responsive_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton({
@@ -10,6 +12,7 @@ class CustomButton extends StatelessWidget {
     this.backgroundColor,
     this.textColor,
     this.borderRadius,
+    this.trailing,
   });
 
   final double? width;
@@ -19,16 +22,20 @@ class CustomButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? textColor;
   final BorderRadius? borderRadius;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final responsive = ResponsiveHelper(context);
+
     return SizedBox(
       width: width,
       height: height,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
+          backgroundColor: backgroundColor ?? theme.primaryColor,
           side: borderRadius != null
               ? BorderSide(color: backgroundColor!, width: 2)
               : BorderSide.none,
@@ -36,7 +43,21 @@ class CustomButton extends StatelessWidget {
             borderRadius: borderRadius ?? BorderRadius.circular(8),
           ),
         ),
-        child: Text(text, style: TextStyle(color: textColor?? Colors.white)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 10,
+          children: [
+            Text(
+              text,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: textColor ?? Colors.white,
+                fontFamily: GoogleFonts.poppins().fontFamily,
+                fontSize: responsive.scaleFont(16),
+              ),
+            ),
+            if (trailing != null) ...[trailing!],
+          ],
+        ),
       ),
     );
   }

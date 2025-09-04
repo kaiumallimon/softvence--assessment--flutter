@@ -45,5 +45,16 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!--Location Permissions-->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to show nearby services</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need your location to provide continuous tracking</string>
+
+		<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.gdelataillade.fetch</string>
+	</array>
 </dict>
 </plist>

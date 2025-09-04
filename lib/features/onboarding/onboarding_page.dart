@@ -1,9 +1,4 @@
-import 'package:assessment/common_widgets/custom_button.dart';
-import 'package:assessment/constants/assets.dart';
-import 'package:assessment/constants/strings.dart';
-import 'package:assessment/features/location/location_page.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import './_onboarding.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -59,6 +54,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     }
   }
 
+  /* Navigate to location page and replace current page */
   void goToLocationPage() {
     Navigator.pushReplacement(
       context,
@@ -68,77 +64,103 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
+    /* Theme and responsive helpers */
     final theme = Theme.of(context);
+    final responsive = ResponsiveHelper(context);
 
     return Scaffold(
-      // Background color
+      /* Background color */
       backgroundColor: theme.scaffoldBackgroundColor,
-      body: Column(
-        children: [
-          Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: _onboardingData.length,
-              physics: NeverScrollableScrollPhysics(),
-              onPageChanged: (pageIndex) {
-                // Update current page index state
-                setState(() {
-                  _currentPage = pageIndex;
-                });
-              },
-              itemBuilder: (context, index) {
-                final currentPageData = _onboardingData[index];
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadiusGeometry.horizontal(
-                        left: Radius.circular(40),
-                        right: Radius.circular(40),
-                      ),
-                      child: Stack(
-                        children: [
-                          // Image
-                          _buildImage(currentPageData: currentPageData),
-                          // Skip button
-                          _buildSkipButton(theme: theme),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildTitle(currentPageData: currentPageData, theme: theme),
-                    const SizedBox(height: 10),
-                    _buildSubtitle(
-                      currentPageData: currentPageData,
-                      theme: theme,
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 20),
-          // Indicator
-          _buildPageIndicator(),
+      
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: _onboardingData.length,
+                physics: const NeverScrollableScrollPhysics(),
 
-          const SizedBox(height: 20),
-          // Next button
-          _buildNextButton(),
-        ],
+                /* Update current page index on page change */
+                onPageChanged: (pageIndex) {
+                  setState(() {
+                    _currentPage = pageIndex;
+                  });
+                },
+                
+                itemBuilder: (context, index) {
+                  final currentPageData = _onboardingData[index];
+                  return SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Flexible image
+                        Stack(
+                          children: [
+                            /* Onboarding image */
+                            _buildImage(currentPageData: currentPageData),
+                            /* Skip button */
+                            _buildSkipButton(
+                              theme: theme,
+                              responsive: responsive,
+                            ),
+                          ],
+                        ),
+                        
+                        const SizedBox(height: 20),
+                       
+                        /* Title */
+                        _buildTitle(
+                          currentPageData: currentPageData,
+                          theme: theme,
+                          responsive: responsive,
+                        ),
+
+                        const SizedBox(height: 10),
+                        
+                        /* Subtitle */
+                        _buildSubtitle(
+                          currentPageData: currentPageData,
+                          theme: theme,
+                          responsive: responsive,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            /* Page indicator dots */
+            _buildPageIndicator(),
+            const SizedBox(height: 20),
+            /* Next button */
+            _buildNextButton(),
+          ],
+        ),
       ),
     );
   }
 
+  /* Onboarding image with rounded bottom corners */
   Widget _buildImage({required Map<String, String> currentPageData}) {
-    return Image.asset(
-      currentPageData["image"] ?? "",
-      width: double.infinity,
-      height: 429,
-      fit: BoxFit.cover,
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(40)),
+      child: Image.asset(
+        currentPageData["image"] ?? "",
+        width: double.infinity,
+        height:
+            MediaQuery.of(context).size.height * 0.5, // scale on small devices
+        fit: BoxFit.cover,
+      ),
     );
   }
 
-  Widget _buildSkipButton({required ThemeData theme}) {
+  /* Skip button */
+  Widget _buildSkipButton({
+    required ThemeData theme,
+    required ResponsiveHelper responsive,
+  }) {
     return Positioned(
       top: 32,
       right: 10,
@@ -150,6 +172,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             color: theme.colorScheme.onPrimary,
             fontWeight: FontWeight.bold,
             fontFamily: GoogleFonts.poppins().fontFamily,
+            fontSize: responsive.scaleFont(16),
             shadows: [
               Shadow(
                 color: Colors.black.withOpacity(0.5),
@@ -161,13 +184,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
         ),
       ),
     );
-    
   }
 
+  /* Title */
   Widget _buildTitle({
     required Map<String, String> currentPageData,
     required ThemeData theme,
-  }){
+    required ResponsiveHelper responsive,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Text(
@@ -176,14 +200,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
           fontWeight: FontWeight.w500,
           fontFamily: GoogleFonts.poppins().fontFamily,
           color: theme.textTheme.bodyLarge?.color,
+          fontSize: responsive.scaleFont(30),
         ),
       ),
     );
   }
-
+  
+  /* Subtitle */
   Widget _buildSubtitle({
     required Map<String, String> currentPageData,
     required ThemeData theme,
+    required ResponsiveHelper responsive,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -192,11 +219,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
           fontFamily: GoogleFonts.oxygen().fontFamily,
           color: theme.textTheme.bodyLarge?.color,
+          fontSize: responsive.scaleFont(14),
         ),
       ),
     );
   }
 
+  /* Page indicator dots */
   Widget _buildPageIndicator() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -218,6 +247,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
     );
   }
 
+  /* Next button:
+      - Navigates to next page or
+      - Finishes onboarding on last page
+   */
   Widget _buildNextButton() {
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 40.0),
@@ -230,4 +263,3 @@ class _OnboardingPageState extends State<OnboardingPage> {
     );
   }
 }
-

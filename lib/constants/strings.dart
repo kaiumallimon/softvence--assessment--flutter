@@ -19,4 +19,13 @@ class AppStrings {
 
   static const String allowLocationButton = "Use Current Location";
   static const String homeButton = "Home";
+  static const String addAlarmButton = "Add Alarm";
+  static const String noLocation = "No location selected";
+  static const String locationTitle = "Selected Location";
+  static const String alarmsSectionTitle = "Alarms";
+  static const String noAlarms = "No alarms set";
+  static const String stopButton = "Stop";
+  static const String snoozeButton = "Snooze";
+  static const String alarmStopDialogSubtitle = "Tap STOP to dismiss the alarm";
+  static const String alarmStopDialogTitle = "Alarm Ringing!";
 }
