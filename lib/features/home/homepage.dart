@@ -87,6 +87,21 @@ class _HomepageState extends State<Homepage> {
     final pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary:  AppColors.primaryColor,
+              secondary: AppColors.primaryColor,
+              onPrimary: Colors.white,
+              onSecondary: Colors.white,
+              onSurface: Colors.white,
+              surface: AppColors.secondaryButtonColor
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (pickedTime != null) {
@@ -106,6 +121,7 @@ class _HomepageState extends State<Homepage> {
       await _scheduleAlarm(alarmTime);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -209,16 +225,22 @@ class _HomepageState extends State<Homepage> {
       children: [
         Image.asset(AppAssets.locationIcon, width: 24, height: 24),
         const SizedBox(width: 8),
-        Expanded(
-          child: _loading
-              ? const CircularProgressIndicator()
-              : Text(
+        _loading
+            ? SizedBox(
+                height: 20,
+                width: 20,
+                child: const CircularProgressIndicator.adaptive(
+                  strokeWidth: 1.5,
+                ),
+              )
+            : Expanded(
+                child: Text(
                   _address ?? AppStrings.noLocation,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontFamily: GoogleFonts.oxygen().fontFamily,
                   ),
                 ),
-        ),
+              ),
       ],
     );
   }
