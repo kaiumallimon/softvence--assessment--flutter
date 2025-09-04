@@ -1,6 +1,7 @@
 import 'package:assessment/common_widgets/custom_button.dart';
 import 'package:assessment/constants/assets.dart';
 import 'package:assessment/constants/strings.dart';
+import 'package:assessment/features/location/location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -53,7 +54,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeIn,
       );
-    } else {}
+    } else {
+      goToLocationPage();
+    }
+  }
+
+  void goToLocationPage() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LocationPage()),
+    );
   }
 
   @override
@@ -133,9 +143,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
       top: 32,
       right: 10,
       child: TextButton(
-        onPressed: () {},
+        onPressed: goToLocationPage,
         child: Text(
-          'Skip',
+          AppStrings.skipButton,
           style: theme.textTheme.bodyLarge?.copyWith(
             color: theme.colorScheme.onPrimary,
             fontWeight: FontWeight.bold,
@@ -212,7 +222,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 40.0),
       child: CustomButton(
-        text: "Next",
+        text: AppStrings.nextButton,
         height: 50,
         width: double.infinity,
         onPressed: goToNextPage,
