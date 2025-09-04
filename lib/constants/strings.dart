@@ -10,4 +10,13 @@ class AppStrings {
 
   static const String onboardingSubtitle3 =
       "Hope to take the courage to pursue your dreams.";
+  static const String nextButton = "Next";
+  static const String skipButton = "Skip";
+
+  static const String permissionPageTitle = "Welcome! Your Personalized Alarm";
+  static const String permissionPageSubtitle =
+      "Allow us to sync your sunset alarm based on your location.";
+
+  static const String allowLocationButton = "Use Current Location";
+  static const String homeButton = "Home";
 }
