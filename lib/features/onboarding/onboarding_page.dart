@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 import './_onboarding.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -68,76 +70,87 @@ class _OnboardingPageState extends State<OnboardingPage> {
     final theme = Theme.of(context);
     final responsive = ResponsiveHelper(context);
 
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: theme.brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+        systemNavigationBarColor: theme.scaffoldBackgroundColor,
+        systemNavigationBarIconBrightness: theme.brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+      ),
+    );
+
     return Scaffold(
       /* Background color */
       backgroundColor: theme.scaffoldBackgroundColor,
       
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: _onboardingData.length,
-                physics: const NeverScrollableScrollPhysics(),
-
-                /* Update current page index on page change */
-                onPageChanged: (pageIndex) {
-                  setState(() {
-                    _currentPage = pageIndex;
-                  });
-                },
-                
-                itemBuilder: (context, index) {
-                  final currentPageData = _onboardingData[index];
-                  return SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Flexible image
-                        Stack(
-                          children: [
-                            /* Onboarding image */
-                            _buildImage(currentPageData: currentPageData),
-                            /* Skip button */
-                            _buildSkipButton(
-                              theme: theme,
-                              responsive: responsive,
-                            ),
-                          ],
-                        ),
-                        
-                        const SizedBox(height: 20),
-                       
-                        /* Title */
-                        _buildTitle(
-                          currentPageData: currentPageData,
-                          theme: theme,
-                          responsive: responsive,
-                        ),
-
-                        const SizedBox(height: 10),
-                        
-                        /* Subtitle */
-                        _buildSubtitle(
-                          currentPageData: currentPageData,
-                          theme: theme,
-                          responsive: responsive,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+      body: Column(
+        children: [
+          Expanded(
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: _onboardingData.length,
+              physics: const NeverScrollableScrollPhysics(),
+      
+              /* Update current page index on page change */
+              onPageChanged: (pageIndex) {
+                setState(() {
+                  _currentPage = pageIndex;
+                });
+              },
+              
+              itemBuilder: (context, index) {
+                final currentPageData = _onboardingData[index];
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Flexible image
+                      Stack(
+                        children: [
+                          /* Onboarding image */
+                          _buildImage(currentPageData: currentPageData),
+                          /* Skip button */
+                          _buildSkipButton(
+                            theme: theme,
+                            responsive: responsive,
+                          ),
+                        ],
+                      ),
+                      
+                      const SizedBox(height: 20),
+                     
+                      /* Title */
+                      _buildTitle(
+                        currentPageData: currentPageData,
+                        theme: theme,
+                        responsive: responsive,
+                      ),
+      
+                      const SizedBox(height: 10),
+                      
+                      /* Subtitle */
+                      _buildSubtitle(
+                        currentPageData: currentPageData,
+                        theme: theme,
+                        responsive: responsive,
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
-            const SizedBox(height: 20),
-            /* Page indicator dots */
-            _buildPageIndicator(),
-            const SizedBox(height: 20),
-            /* Next button */
-            _buildNextButton(),
-          ],
-        ),
+          ),
+          const SizedBox(height: 20),
+          /* Page indicator dots */
+          _buildPageIndicator(),
+          const SizedBox(height: 20),
+          /* Next button */
+          _buildNextButton(),
+        ],
       ),
     );
   }
